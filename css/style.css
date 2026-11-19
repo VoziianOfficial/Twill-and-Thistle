@@ -1841,11 +1841,35 @@ p{line-height:1.55}
 .faq details,.journalcard details,.article details,.productpage details{border-color:#333}
 summary:after{content:"";width:20px;height:20px;border:1px solid #7d6749;border-radius:50%;flex:none;background:center/10px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' stroke='%23c79a58'%3E%3Cpath d='M0 6h12M6 0v12'/%3E%3C/svg%3E");transition:transform .35s}
 details[open] summary:after{content:"";transform:rotate(180deg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' stroke='%23c79a58'%3E%3Cpath d='M0 6h12'/%3E%3C/svg%3E")}
-.journalcard{border:1px solid #333;border-radius:10px}.journalcard>img{aspect-ratio:1.68;height:auto}.journalcard>div{padding:18px}.journalcard p{margin-top:8px}.journalcard details{margin-top:12px;color:var(--brass);padding-bottom:0;font-size:.87rem}
+.journalcard{align-self:start;border:1px solid #333;border-radius:10px}.journalcard>img{aspect-ratio:1.68;height:auto}.journalcard>div{padding:18px}.journalcard p{margin-top:8px}.journalcard details{margin-top:12px;color:var(--brass);padding-bottom:0;font-size:.87rem}
 .chairstage .label{margin:0}.chairframe{background:#171717;border-radius:12px}
 .swatchrow button{border-color:#111}
 .contact{background:#121212}.contactintro{grid-template-columns:.8fr 1.2fr}.contact form{background:#080808;border:1px solid #303030;border-radius:10px}
 input,textarea,select{background:#131313;border-color:#454545;border-radius:6px}
+/* Catalog filters: styled native controls and their progressive-enhancement picker. */
+.filters{gap:clamp(10px,1.25vw,18px)}
+.filters label{display:grid;gap:9px;min-width:0;color:#b8ab96;font:500 .68rem/1.4 Inter,Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase}
+.filters select{appearance:none;min-width:0;min-height:48px;margin:0;padding:12px 42px 12px 15px;border:1px solid #514638;border-radius:8px;background:#151310 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none' stroke='%23c79a58' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2 2 5 5 5-5'/%3E%3C/svg%3E") no-repeat right 15px center;color:#f1eadf;font:500 .84rem/1.4 Inter,Arial,sans-serif;letter-spacing:0;text-transform:none;cursor:pointer;transition:border-color .25s,background-color .25s,box-shadow .25s}
+.filters select:hover{background-color:#1c1813;border-color:#8d7451}
+.filters select:focus-visible{outline:2px solid #c79a58;outline-offset:3px;border-color:#c79a58;box-shadow:0 0 0 4px #c79a5814}
+.filters select:has(option:checked:not([value=""])) {border-color:#97764b;background-color:#211b14;color:#e3c28d}
+.filters select option{background:#171410;color:#f1eadf}
+@supports(appearance:base-select){
+ .filters select,.filters select::picker(select){appearance:base-select}
+ .filters select{display:flex;align-items:center;justify-content:space-between;gap:12px;background-image:none;padding-right:15px}
+ .filters select::picker-icon{content:"";flex:none;width:14px;height:9px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none' stroke='%23c79a58' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2 2 5 5 5-5'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .25s}
+ .filters select:open{border-color:#c79a58;background-color:#211b14}
+ .filters select:open::picker-icon{transform:rotate(180deg)}
+ .filters select::picker(select){margin-top:7px;padding:6px;border:1px solid #6c5739;border-radius:10px;background:#171410;color:#f1eadf;box-shadow:0 16px 36px #0009;max-block-size:min(320px,50dvh);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#756044 #171410;opacity:0;transform:translateY(-5px);transition:opacity .2s,transform .2s,display .2s allow-discrete,overlay .2s allow-discrete}
+ .filters select::picker(select):popover-open{opacity:1;transform:translateY(0)}
+ .filters select option{display:flex;align-items:center;gap:14px;min-height:42px;padding:10px 12px;border:0;border-radius:5px;font:400 .84rem/1.4 Inter,Arial,sans-serif;cursor:pointer}
+ .filters select option:checked{color:#e7c48d;background:#2b2318;font-weight:500}
+ .filters select option:is(:hover,:focus){outline:none;background:#3a2d1d;color:#fff4dd}
+ .filters select option::checkmark{order:1;margin-left:auto;color:#d6ae70}
+ @starting-style{.filters select::picker(select):popover-open{opacity:0;transform:translateY(-5px)}}
+}
+@media(prefers-reduced-motion:reduce){.filters select{transition:none}@supports(appearance:base-select){.filters select::picker-icon,.filters select::picker(select){transition:none}}}
+
 footer{background:#070707 url("../img/twill-pattern.svg") repeat;border-color:#333}
 .footgallery{display:flex;justify-content:flex-end;gap:7px;margin-top:10px}.footgallery a{background:#191817;border-radius:7px}.footgallery img{width:52px;height:47px;object-fit:contain}
 #notice{border-radius:7px;background:#181818f5;font-family:Inter,sans-serif}
@@ -1974,7 +1998,15 @@ main details[data-goal="closed"] summary:after{transform:rotate(0deg);background
 .still-trio figure{position:relative;margin:0 0 12px;aspect-ratio:1.65;overflow:hidden;border-radius:8px;background:#211f1b}.still-trio img{width:100%;height:100%;object-fit:cover;transition:transform .65s}.still-trio figure span{position:absolute;bottom:0;left:0;width:100%;background:#34291fdf;color:#f6e9d7;padding:10px;transform:translateY(100%);transition:transform .4s}
 .still-trio a:is(:hover,:focus-visible) figure span{transform:none}.still-trio a:hover img{transform:scale(1.045)}
 .inner-spread{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}.inner-spread>div:last-child{background:#211c17;padding:clamp(20px,5vw,70px);align-content:center}.inner-spread img{width:100%;height:100%;max-height:410px;object-fit:cover}.inner .chapter{padding-block:clamp(20px,3vw,45px)}
-.sampler-grid{display:grid;grid-template-columns:1fr 2fr;gap:20px;margin-top:20px}.sample-choices{padding:20px;background:#171512}.sample-choices button{width:100%;display:flex;align-items:center;justify-content:space-between;background:transparent;color:#eee;border:0;border-bottom:1px solid #4a4035;padding:14px 5px}.sample-choices button[aria-pressed=true]{color:var(--brass)}.sample-visual{position:relative;border-radius:8px;overflow:hidden;min-height:210px}.inner-edit .still-trio img{object-fit:contain}.inner-edit .still-trio figure{background:#24201b}
+.sampler-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:stretch;gap:20px;margin-top:20px}.sample-choices{padding:20px;background:#171512}.sample-choices button{width:100%;display:flex;align-items:center;justify-content:space-between;background:transparent;color:#eee;border:0;border-bottom:1px solid #4a4035;padding:14px 5px}.sample-choices button[aria-pressed=true]{color:var(--brass)}.sample-visual{position:relative;border-radius:8px;overflow:hidden;min-height:210px}
+/* All notes share one grid cell, reserving the height of the longest response. */
+.inner-sampler .sample-choices{min-width:0}
+.inner-sampler .sample-notes{display:grid;margin-top:14px}
+.inner-sampler .sample-notes p{grid-area:1/1;min-width:0;width:100%;margin:0;line-height:1.65;overflow-wrap:anywhere;opacity:0;visibility:hidden;transform:none;transition:opacity .3s,visibility .3s}
+.inner-sampler .sample-notes p.is-active{opacity:1;visibility:visible}
+.inner-sampler .sample-visual{min-width:0;background:#171512}
+@media(prefers-reduced-motion:reduce){.inner-sampler .sample-notes p,.inner-sampler .sample-visual img{transition:none}}
+.inner-edit .still-trio img{object-fit:contain}.inner-edit .still-trio figure{background:#24201b}
 .contact-workbench{margin:24px auto 0;max-width:1100px;display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,30px);align-items:stretch}
 .contact-workbench form{margin:0;padding:clamp(15px,2.4vw,32px);background:#191713;border:1px solid #534434;border-radius:13px}
 .contact .formrow{grid-template-columns:1fr 1fr;gap:10px}.contact .formrow label:last-child{grid-column:1/-1}
@@ -2059,8 +2091,6 @@ main details[data-goal="closed"] summary:after{transform:rotate(0deg);background
 #fabric-study .fabric-room::after{content:"";position:absolute;z-index:1;left:9%;right:9%;bottom:10%;height:11%;background:radial-gradient(ellipse,#100b07a6,transparent 69%);pointer-events:none}
 #fabric-study .fabric-pair{position:absolute;inset:0;z-index:2;width:100%;height:100%;max-width:none;object-fit:contain;opacity:0;filter:drop-shadow(0 12px 9px #100a063d);transition:opacity .7s cubic-bezier(.25,.46,.45,.94);pointer-events:none}
 #fabric-study .fabric-pair.is-active{opacity:1}
-#fabric-study .fabric-room figcaption{position:absolute;z-index:3;left:11%;right:3%;bottom:4%;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e8d3b52b;padding-top:13px;color:#d6c8b1;font:500 .66rem/1.4 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.12em}
-#fabric-study .fabric-room figcaption i{font-style:normal;margin-inline:7px;opacity:.45}
 @media(hover:hover){#fabric-study .fabric-palettes button:hover{color:#eee5d5}#fabric-study .fabric-palettes button:hover .palette-dot{transform:translateY(-2px);outline-color:#d3b17b}}
 @media(max-width:1100px){
  #fabric-study .fabric-stage{grid-template-columns:.82fr 1.18fr;min-height:460px}
@@ -2079,11 +2109,11 @@ main details[data-goal="closed"] summary:after{transform:rotate(0deg);background
  #fabric-study .fabric-selection{margin:18px auto 0;padding-top:13px}
  #fabric-study .fabric-room{width:110%;margin:0 -5%;aspect-ratio:3/2}
  #fabric-study .fabric-room::before{mask-image:linear-gradient(180deg,transparent,#000 18%,#000 88%,transparent)}
- #fabric-study .fabric-room figcaption{left:7%;right:7%;bottom:5%;font-size:.58rem;padding-top:10px}
 }
 @media(prefers-reduced-motion:reduce){#fabric-study .fabric-pair,#fabric-study .palette-dot,#fabric-study .fabric-palettes button{transition:none}#fabric-study .fabric-palettes button:hover .palette-dot{transform:none}}
-#contact .contactintro{max-width:1100px;margin-inline:auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2vw,30px)}
-#contact .contactintro h2{text-align:center;align-self:center}
+#contact .contactintro{max-width:960px;margin:0 auto clamp(28px,3vw,44px);grid-template-columns:minmax(0,1fr);justify-items:center;gap:clamp(18px,2vw,26px);text-align:center}
+#contact .contactintro h2{width:100%;margin:0;font-size:clamp(2.1rem,3.6vw,3.6rem);line-height:1.14;text-align:center;text-wrap:balance}
+#contact .contactintro p{width:100%;max-width:850px;margin:0;color:#b9b5ae;font-size:clamp(.9rem,1.05vw,1rem);line-height:1.8;text-align:center;text-wrap:pretty}
 #panel[data-view=search],#panel[data-view=bag]{inset:0;margin:auto;min-height:0;height:fit-content;max-height:90dvh}
 #panel[data-view=search] .panelbody,#panel[data-view=search] #matches{min-height:0;height:auto}
 #panel[data-view=bag] .panelbody{text-align:center}
@@ -2096,10 +2126,20 @@ main details[data-goal="closed"] summary:after{transform:rotate(0deg);background
 #panel[data-view=menu] .menu-object{position:absolute;left:5px;width:25px;height:25px;object-fit:contain}
 #panel[data-view=menu] .menulinks a:last-child{font:normal .86rem/1.4 var(--sans);color:var(--brass);border:0}
 @media(max-width:760px){
- #contact .contactintro{grid-template-columns:1fr}
- #contact .contactintro p{text-align:center}
  .why .reasonlist>div{padding:13px 30px 13px 10px}
  .why .reasonlist i{width:24px;height:24px;right:4px}
  .inner-spread>.cube-stage{min-height:0;aspect-ratio:1.65}
  .note-copy{padding:10px}
+}
+
+/* Give the before/after introduction its own rhythm above the image. */
+.comparison-section .comparison-heading{display:grid;justify-items:start;gap:12px;margin-bottom:clamp(24px,2.4vw,36px);text-align:left}
+.comparison-section .comparison-heading h2{margin:0;line-height:1.15}
+.comparison-section .comparison-heading p{max-width:72ch;margin:0;color:#b9b3a9;font-size:clamp(.9rem,1.1vw,1rem);line-height:1.75}
+.comparison-section .compare{border:1px solid #524431;border-radius:12px;background:#171512}
+.comparison-section .compare>span{padding:6px 12px;border:1px solid #9b80554d;border-radius:5px;background:#17130ee6;color:#eadbc4;font:500 .7rem/1.4 Inter,Arial,sans-serif;letter-spacing:.035em}
+@media(max-width:650px){
+ .comparison-section .comparison-heading{justify-items:center;gap:10px;margin-bottom:22px;text-align:center}
+ .comparison-section .comparison-heading p{max-width:38ch}
+ .comparison-section .compare{border-radius:9px}
 }

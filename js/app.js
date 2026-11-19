@@ -221,7 +221,7 @@ const fabricPalettes = [
  {name:"Ivory",material:"Linen & striped linen",color:"#ded3bd",image:"fabric-pair-ivory",alt:"Walnut lounge chair in ivory linen beside a walnut table draped in ivory striped linen"}
 ];
 function studySection(){
- return `<section id="fabric-study" class="band" aria-labelledby="fabricStudyTitle"><div class="wrap fabric-stage"><div class="fabric-copy"><p class="label">Fabric study</p><h2 id="fabricStudyTitle">A Considered<br>Pairing</h2><p class="fabric-intro">A sculpted walnut chair. A softly draped table. One palette to bring them together.</p><p class="fabric-instruction">Choose a shade. See the whole setting change.</p><div class="fabric-palettes" role="group" aria-label="Choose a colour for the chair and tablecloth">${fabricPalettes.map((palette,i)=>`<button type="button" data-chair="${i}" aria-label="${palette.name}: ${palette.material.toLowerCase()}" aria-pressed="${i===0}" style="--dot:${palette.color}"><span class="palette-dot" aria-hidden="true"></span><span>${palette.name}</span></button>`).join("")}</div><div class="fabric-selection" aria-live="polite" aria-atomic="true"><span id="fabricPaletteName">${fabricPalettes[0].name}</span><span class="fabric-selection-divider" aria-hidden="true"></span><span id="fabricPaletteMaterial">${fabricPalettes[0].material}</span></div></div><figure class="fabric-room" aria-label="A chair and table styled together in a warm interior">${fabricPalettes.map((palette,i)=>`<img class="fabric-pair${i===0?" is-active":""}" data-palette-scene="${i}" src="img/${palette.image}.webp" alt="${palette.alt}" width="1536" height="1024" loading="lazy" decoding="async" aria-hidden="${i!==0}">`).join("")}<figcaption><span>The living edit</span><span><span id="fabricPaletteIndex">01</span> <i aria-hidden="true">/</i> 03</span></figcaption></figure></div></section>
+ return `<section id="fabric-study" class="band" aria-labelledby="fabricStudyTitle"><div class="wrap fabric-stage"><div class="fabric-copy"><p class="label">Fabric study</p><h2 id="fabricStudyTitle">A Considered<br>Pairing</h2><p class="fabric-intro">A sculpted walnut chair. A softly draped table. One palette to bring them together.</p><p class="fabric-instruction">Choose a shade. See the whole setting change.</p><div class="fabric-palettes" role="group" aria-label="Choose a colour for the chair and tablecloth">${fabricPalettes.map((palette,i)=>`<button type="button" data-chair="${i}" aria-label="${palette.name}: ${palette.material.toLowerCase()}" aria-pressed="${i===0}" style="--dot:${palette.color}"><span class="palette-dot" aria-hidden="true"></span><span>${palette.name}</span></button>`).join("")}</div><div class="fabric-selection" aria-live="polite" aria-atomic="true"><span id="fabricPaletteName">${fabricPalettes[0].name}</span><span class="fabric-selection-divider" aria-hidden="true"></span><span id="fabricPaletteMaterial">${fabricPalettes[0].material}</span></div></div><figure class="fabric-room" aria-label="A chair and table styled together in a warm interior">${fabricPalettes.map((palette,i)=>`<img class="fabric-pair${i===0?" is-active":""}" data-palette-scene="${i}" src="img/${palette.image}.webp" alt="${palette.alt}" width="1536" height="1024" loading="lazy" decoding="async" aria-hidden="${i!==0}">`).join("")}</figure></div></section>
  ${galleryTrio()}<section class="chapter wrap fabricfold">${heading("Styling room","See the Finish")}
 <div class="stylelab"><div class="labnav">${products.map((p,i)=>`<button data-look="${i}"><i class="dot" style="--dot:${swatches[i]}"></i>${p.name}</button>`).join("")}</div><div id="labScene"></div></div></section>`;
 }
@@ -242,7 +242,6 @@ async function setFabricPalette(index){
  });
  $("#fabricPaletteName").textContent=palette.name;
  $("#fabricPaletteMaterial").textContent=palette.material;
- $("#fabricPaletteIndex").textContent=String(index+1).padStart(2,"0");
 }
 function contactStrip(){
   return `<section class="wrap strip"><h2>Write to<br>Our Studio</h2><div><label for="emailStart">Your email</label><input id="emailStart" type="email" autocomplete="email" placeholder="Email address"></div><button class="button" data-action="enquire">Start an enquiry ${icon("arrow")}</button></section>`;
@@ -284,7 +283,7 @@ function compare(p) {
   return `<div class="compare" style="--cut:50%">${img("b" + pos(p), "Before styling")}${img("a" + pos(p), "Styled with " + p.name, "after")}<div class="split"></div><span>Styled</span><span>Before</span><input type="range" min="0" max="100" value="50" aria-label="Compare room before and after styling"></div>`;
 }
 function product(p) {
-  return `<div class="wrap inner">${bread(`<a href="${shopUrl(p.category)}">${p.category}</a><span>/</span>${p.name}`)}<div class="productpage"><div class="productstage">${img("p" + pos(p), p.name)}</div><div><div class="tag"><b></b>${p.category}</div><h1>${p.name}</h1><strong class="price">${money(p.price)}</strong><p>${p.description}</p><p><i class="dot" style="--dot:${swatches[pos(p)]}"></i> ${p.color} · ${p.size}</p><button class="button" data-add="${p.id}">Add to bag ${icon("bag")}</button>${accordion("Composition & finish", p.composition + ". " + p.detail)}${accordion("Size & care", p.size + ". " + p.care)}</div></div><section class="block"><div class="sectionhead"><h2>Before <em>& after.</em></h2><p>${p.styling}</p></div>${compare(p)}</section><section class="block"><h2>Pair it <em>with.</em></h2><div class="related">${products
+  return `<div class="wrap inner">${bread(`<a href="${shopUrl(p.category)}">${p.category}</a><span>/</span>${p.name}`)}<div class="productpage"><div class="productstage">${img("p" + pos(p), p.name)}</div><div><div class="tag"><b></b>${p.category}</div><h1>${p.name}</h1><strong class="price">${money(p.price)}</strong><p>${p.description}</p><p><i class="dot" style="--dot:${swatches[pos(p)]}"></i> ${p.color} · ${p.size}</p><button class="button" data-add="${p.id}">Add to bag ${icon("bag")}</button>${accordion("Composition & finish", p.composition + ". " + p.detail)}${accordion("Size & care", p.size + ". " + p.care)}</div></div><section class="block comparison-section"><div class="comparison-heading"><h2>Before <em>& after.</em></h2><p>${p.styling}</p></div>${compare(p)}</section><section class="block"><h2>Pair it <em>with.</em></h2><div class="related">${products
     .filter((x) => x !== p)
     .map(productCard)
     .join("")}</div></section></div>`;
@@ -395,11 +394,11 @@ function innerStudies(piece){
  const set=[p,alternate,products[(index+2)%products.length]];
  const spreads=[
  `<section class="inner-spread chapter">${photoCube(["look"+index,"detail"+(index+8),"detail"+(index+4),"detail"+index],p.name+" material notebook")}<div><p class="label">Material notebook</p><h2>${p.material} in Detail</h2><p>${p.description}</p><p>${p.composition} · ${p.size}. ${p.detail}</p><p>${p.styling}</p>${textLink(itemUrl(alternate),"Pair with "+alternate.name)}</div></section>`,
- `<section class="inner-sampler chapter"><h2>From Fibre to Finish</h2><div class="sampler-grid"><div class="sample-choices">${["Fibre","Dimensions","Care"].map((t,i)=>`<button data-sample="${i}" aria-pressed="${i===0}">${t} ${icon("arrow")}</button>`).join("")}<p id="sampleNote">${esc(p.composition)}</p></div><div class="sample-visual">${shots.map((n,i)=>img(n,p.name+" studio study",i?"":"show")).join("")}</div></div></section>`,
+ `<section class="inner-sampler chapter"><h2>From Fibre to Finish</h2><div class="sampler-grid"><div class="sample-choices">${["Fibre","Dimensions","Care"].map((t,i)=>`<button data-sample="${i}" aria-pressed="${i===0}">${t} ${icon("arrow")}</button>`).join("")}<div id="sampleNote" class="sample-notes" role="status" aria-live="polite" aria-atomic="true">${[p.composition,p.size,p.care].map((text,i)=>`<p class="sample-note${i===0?" is-active":""}" aria-hidden="${i!==0}">${esc(text)}</p>`).join("")}</div></div><div class="sample-visual">${shots.map((n,i)=>img(n,p.name+" studio study",i?"":"show")).join("")}</div></div></section>`,
  `<section class="chapter inner-edit"><p class="label">Studio selection</p><h2>Build a Textile Pairing</h2><div class="still-trio">${set.map((item,i)=>`<a href="${itemUrl(item)}"><figure>${img("p"+pos(item),item.name)}<span>View piece ${icon("arrow")}</span></figure><h3>${item.name}</h3><p>${item.material} · ${money(item.price)}</p></a>`).join("")}</div></section>`
  ];
  if(index%2)spreads.reverse();
- return spreads.join("")+(!piece?`<section class="block"><h2>Before &amp; After</h2><p>${p.styling}</p>${compare(p)}</section>`:"");
+ return spreads.join("")+(!piece?`<section class="block comparison-section"><div class="comparison-heading"><h2>Before &amp; After</h2><p>${p.styling}</p></div>${compare(p)}</section>`:"");
 }
 
 const productId = params.get("product"),
@@ -796,11 +795,22 @@ for(const cube of $$(".cloth-cube")){
 $(".sofa-scene")?.addEventListener("click",e=>{
  const el=e.currentTarget;el.setAttribute("aria-pressed",el.getAttribute("aria-pressed")!=="true");
 });
-const selectedSample=selected||products[Math.max(0,categories.indexOf(listing))];
-$$("[data-sample]").forEach((b,i)=>b.addEventListener("click",()=>{
- $$("[data-sample]").forEach(el=>el.setAttribute("aria-pressed",el===b));
- $$(".sample-visual img").forEach((el,j)=>el.classList.toggle("show",j===i));
- $("#sampleNote").textContent=[selectedSample.composition,selectedSample.size,selectedSample.care][i];
+let sampleRequest=0;
+$$("[data-sample]").forEach((button,index)=>button.addEventListener("click",async()=>{
+ const section=button.closest(".inner-sampler");
+ const images=$$(".sample-visual img",section);
+ const request=++sampleRequest;
+ try{await images[index].decode();}catch{return;}
+ if(request!==sampleRequest)return;
+ $$("[data-sample]",section).forEach(el=>el.setAttribute("aria-pressed",el===button));
+ images.forEach((image,i)=>{
+  image.classList.toggle("show",i===index);
+  image.setAttribute("aria-hidden",i!==index);
+ });
+ $$(".sample-note",section).forEach((note,i)=>{
+  note.classList.toggle("is-active",i===index);
+  note.setAttribute("aria-hidden",i!==index);
+ });
 }));
 if(!reduced.matches){
  const typeObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
