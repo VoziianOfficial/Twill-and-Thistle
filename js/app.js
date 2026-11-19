@@ -178,7 +178,7 @@ function studioStory(){
   return `<section id="about" class="wrap chapter about-layout"><div class="collage"><div class="collage-main">${img("weaver","An artisan working with cloth in the studio")}</div><span class="spine">The atelier</span><div class="collage-count"><strong data-count="4">4</strong><span>Textile collections</span></div><div class="collage-inset">${img("poster","Spools of thread on the workbench")}</div></div><div class="aboutcopy"><span class="round-skein">${img("obj2","")}</span>${heading("About us","A Room Begins<br>With Its Textiles")}<p>Our collection brings colour, texture and comfort to everyday spaces. Start with a favourite shade, then layer a different weave alongside it.</p><div class="storytiles"><div class="tilelist"><div>${icon("weave")}<div><h3>Our palette</h3><p>Indigo, clay, ivory and ochre, in tones you can mix.</p></div></div><div>${icon("leaf")}<div><h3>Our materials</h3><p>Wool, cotton and flax, with the fibre and finish listed for each piece.</p></div></div></div><a href="?page=care" class="piclink">${img("studio","Linen warp and shuttle on a loom")}<span>Materials & care ${icon("arrow")}</span></a></div></div></section>`;
 }
 function collectionsSection(){
- return `<section id="catalog" class="band"><div class="wrap chapter">${heading("What we offer","Soft Layers for<br>Every Room",`<div class="headnote"><p>Choose a textile by the way you live. Check its weave, shade and measurements before adding it to your bag.</p>${button("?shop=all","View all textiles")}</div>`)}<div id="featured" class="offergrid"></div><div class="endcontrols">${controls("featured")}</div></div></section>`;
+ return `<section id="catalog" class="band"><div class="wrap chapter">${heading("What we offer","Soft Layers for Every Room",`<div class="headnote"><p>Choose a textile by the way you live. Check its weave, shade and measurements before adding it to your bag.</p>${button("?shop=all","View all textiles")}</div>`)}<div id="featured" class="offergrid"></div><div class="endcontrols">${controls("featured")}</div></div></section>`;
 }
 const facts=[["4","Textile collections"],["2","Rooms to style"],["4","Signature shades"],["50","cm cushion width"],["170","cm throw length"],["180","cm runner length"]];
 function factBand(){
@@ -186,7 +186,7 @@ function factBand(){
 }
 const edits=[["Sunlit Sitting Room","Living Room","Living Room"],["The Window Seat","Living Room","Throws & Blankets"],["The Limestone Table","Dining Room","Tablecloths"],["The Walnut Alcove","Dining Room","Table Runners"],["The Garden Room","Living Room","Cushion Covers"]];
 function roomGallery(){
- return `<section class="chapter wrap" id="room-edits">${heading("Explore our room edits","Five Ways to<br>Dress a Room",`<div class="headnote"><p>See how a single woven layer changes the balance of a room.</p>${button("?shop=all","Browse pieces")}</div>`)}<div class="gallerygrid">${edits.map(([t,m,c],i)=>`<a class="gallerycard" href="${shopUrl(c)}"><div class="gallerypic"><div class="flip-frame"><div class="flip-front">${img("edit"+i,t)}</div><div class="flip-back">${img("story"+(i+3),"Textile detail for "+t)}</div></div><i>${icon("arrow")}</i></div><div class="gallerycap"><small>${m} <b>${icon("arrow")}</b> Textile styling</small><h3>${t}</h3></div></a>`).join("")}</div></section>`;
+ return `<section class="chapter wrap" id="room-edits">${heading("Explore our room edits","Five Ways to Dress a Room",`<div class="headnote"><p>See how a single woven layer changes the balance of a room.</p>${button("?shop=all","Browse pieces")}</div>`)}<div class="gallerygrid">${edits.map(([t,m,c],i)=>`<a class="gallerycard" href="${shopUrl(c)}"><div class="gallerypic"><div class="flip-frame"><div class="flip-front">${img("edit"+i,t)}</div><div class="flip-back">${img("story"+(i+3),"Textile detail for "+t)}</div></div><i>${icon("arrow")}</i></div><div class="gallerycap"><small>${m} <b>${icon("arrow")}</b> Textile styling</small><h3>${t}</h3></div></a>`).join("")}</div></section>`;
 }
 function processSection(){
  const steps=[["ruler","Measure your space","Check your insert, seat or tabletop against the listed dimensions."],["weave","Select your cloth","Build a palette with contrasting weaves and a shade in common."],["bag","Request your pieces","Send your bag to the studio for availability and delivery details."]];
@@ -198,7 +198,7 @@ function photoCube(names, label){
 }
 function reasons(){
  const reasons=[["ruler","Clear measurements","Exact sizes for cushions, throws and table linen."],["leaf","Fabric composition","Know the fibres in each piece before ordering."],["weave","Coordinated colour","Four shades to layer across the collection."],["mail","Studio support","Ask about fit, care or delivery in one place."]];
- return `<section class="chapter wrap why"><div class="whyphoto">${photoCube(["edit5","look0","edit5","look0"],"Soft furnishings in a finished room")}<div class="quotein"><span>“</span><p>Start with a cloth you love. Let its colour guide the rest of the room.</p><strong>From the studio</strong></div></div><div>${heading("Why choose our textiles","Consider Every Detail")}<div class="reasonlist">${reasons.map(([k,t,d],i)=>`<div tabindex="0" style="--fabric:url('img/cloth${3*i+1}.webp')"><i>${img("obj"+[6,1,5,8][i],"")}</i><h3>${t}</h3><p>${d}</p></div>`).join("")}</div></div></section>`;
+ return `<section class="chapter wrap why"><div class="whyphoto">${photoCube(["edit5","look0","edit5","look0"],"Soft furnishings in a finished room")}<div class="quotein"><span>“</span><p>Start with a cloth you love. Let its colour guide the rest of the room.</p><strong>From the studio</strong></div></div><div>${heading("Why choose our textiles","Consider Every Detail")}<div class="reasonlist">${reasons.map(([k,t,d],i)=>`<div tabindex="0" style="--fabric:url('../img/cloth${3*i+1}.webp')"><i>${img("obj"+[6,1,5,8][i],"")}</i><h3>${t}</h3><p>${d}</p></div>`).join("")}</div></div></section>`;
 }
 function materialTeam(){
  return `<section class="band"><div class="wrap chapter">${heading("Meet the materials","The Fabric Library",textLink("?page=care","Read the care guide"))}<div class="categorygrid fabric-team">${products.map((p,i)=>`<a class="category" data-index="${i}" href="${itemUrl(p)}">${img("cloth"+(3*i),p.composition+" weave")}<div><h3>${p.material}</h3><p>${p.name}</p></div></a>`).join("")}</div></div></section>`;
@@ -215,10 +215,34 @@ function faqSection(){
 function journalSection(){
  return `<section id="journal" class="chapter wrap">${heading("Journal & guides","Notes on Cloth",textLink("?page=care","Materials & care"))}<div class="three">${notes.map(([t,sub,body],i)=>`<article class="journalcard">${img("journal"+i,sub)}<div><h3>${t}</h3><p>${sub}.</p><details><summary>Read the note</summary><p>${body}</p></details></div></article>`).join("")}</div></section>`;
 }
+const fabricPalettes = [
+ {name:"Ochre",material:"Bouclé & striped linen",color:"#b68a42",image:"fabric-pair-ochre",alt:"Walnut lounge chair in ochre bouclé beside a walnut table draped in ochre striped linen"},
+ {name:"Petrol",material:"Velvet & striped linen",color:"#294f59",image:"fabric-pair-petrol",alt:"Walnut lounge chair in petrol velvet beside a walnut table draped in petrol striped linen"},
+ {name:"Ivory",material:"Linen & striped linen",color:"#ded3bd",image:"fabric-pair-ivory",alt:"Walnut lounge chair in ivory linen beside a walnut table draped in ivory striped linen"}
+];
 function studySection(){
- return `<section id="fabric-study" class="band"><div class="wrap chapter chairstage"><div><p class="label">Fabric study</p><h2>Cloth for Seat<br>and Table</h2><p>Select a swatch to dress the same walnut frame in a different cloth. Compare the soft loops of bouclé, the sheen of velvet and the open weave of linen beside the draped table.</p><div class="swatchrow">${["Ochre bouclé","Petrol velvet","Ivory linen"].map((v,i)=>`<button data-chair="${i}" aria-label="${v}" aria-pressed="${i===0}" style="--dot:${["#b48b45","#294d5c","#ded2bb"][i]}"></button>`).join("")}</div></div><div class="chairframe">${img("chair0","Walnut lounge chair in ochre bouclé")}<div class="table-study">${img("obj3","Oak table dressed in woven linen")}</div></div></div></section>
+ return `<section id="fabric-study" class="band" aria-labelledby="fabricStudyTitle"><div class="wrap fabric-stage"><div class="fabric-copy"><p class="label">Fabric study</p><h2 id="fabricStudyTitle">A Considered<br>Pairing</h2><p class="fabric-intro">A sculpted walnut chair. A softly draped table. One palette to bring them together.</p><p class="fabric-instruction">Choose a shade. See the whole setting change.</p><div class="fabric-palettes" role="group" aria-label="Choose a colour for the chair and tablecloth">${fabricPalettes.map((palette,i)=>`<button type="button" data-chair="${i}" aria-label="${palette.name}: ${palette.material.toLowerCase()}" aria-pressed="${i===0}" style="--dot:${palette.color}"><span class="palette-dot" aria-hidden="true"></span><span>${palette.name}</span></button>`).join("")}</div><div class="fabric-selection" aria-live="polite" aria-atomic="true"><span id="fabricPaletteName">${fabricPalettes[0].name}</span><span class="fabric-selection-divider" aria-hidden="true"></span><span id="fabricPaletteMaterial">${fabricPalettes[0].material}</span></div></div><figure class="fabric-room" aria-label="A chair and table styled together in a warm interior">${fabricPalettes.map((palette,i)=>`<img class="fabric-pair${i===0?" is-active":""}" data-palette-scene="${i}" src="img/${palette.image}.webp" alt="${palette.alt}" width="1536" height="1024" loading="lazy" decoding="async" aria-hidden="${i!==0}">`).join("")}<figcaption><span>The living edit</span><span><span id="fabricPaletteIndex">01</span> <i aria-hidden="true">/</i> 03</span></figcaption></figure></div></section>
  ${galleryTrio()}<section class="chapter wrap fabricfold">${heading("Styling room","See the Finish")}
 <div class="stylelab"><div class="labnav">${products.map((p,i)=>`<button data-look="${i}"><i class="dot" style="--dot:${swatches[i]}"></i>${p.name}</button>`).join("")}</div><div id="labScene"></div></div></section>`;
+}
+let fabricPaletteRequest = 0;
+async function setFabricPalette(index){
+ const palette=fabricPalettes[index];
+ const target=$(`[data-palette-scene="${index}"]`);
+ if(!palette||!target)return;
+ const request=++fabricPaletteRequest;
+ // Keep the current pair visible until the new transparent image is ready.
+ try{await target.decode();}catch{return;}
+ if(request!==fabricPaletteRequest)return;
+ $$("[data-chair]").forEach(button=>button.setAttribute("aria-pressed",Number(button.dataset.chair)===index));
+ $$("[data-palette-scene]").forEach(image=>{
+  const active=image===target;
+  image.classList.toggle("is-active",active);
+  image.setAttribute("aria-hidden",!active);
+ });
+ $("#fabricPaletteName").textContent=palette.name;
+ $("#fabricPaletteMaterial").textContent=palette.material;
+ $("#fabricPaletteIndex").textContent=String(index+1).padStart(2,"0");
 }
 function contactStrip(){
   return `<section class="wrap strip"><h2>Write to<br>Our Studio</h2><div><label for="emailStart">Your email</label><input id="emailStart" type="email" autocomplete="email" placeholder="Email address"></div><button class="button" data-action="enquire">Start an enquiry ${icon("arrow")}</button></section>`;
@@ -605,13 +629,7 @@ document.addEventListener("click", (e) => {
   if (!b) return;
   if(b.dataset.searchTurn){searchOffset+=4*Number(b.dataset.searchTurn);searchResults($("#query").value);}
   if (b.hasAttribute("data-chair")) {
-    const i = Number(b.dataset.chair);
-    const chair = $(".chairframe img");
-    chair.src = "img/chair" + i + ".webp";
-    chair.alt = "Walnut chair in " + b.getAttribute("aria-label");
-    $$("[data-chair]").forEach((el) =>
-      el.setAttribute("aria-pressed", el === b),
-    );
+    setFabricPalette(Number(b.dataset.chair));
   }
   if (b.dataset.add) {
     changeQty(b.dataset.add, 1);
@@ -808,18 +826,38 @@ if(!reduced.matches){
 }
 for(const d of $$("main details")){
  const summary=$("summary",d);
+ const content=[...d.children].filter(el=>el!==summary);
  let animation;
+ let fades=[];
  summary.addEventListener("click",event=>{
   if(reduced.matches||!d.animate)return;
   event.preventDefault();
   const start=d.getBoundingClientRect().height;
   const opening=d.dataset.goal?d.dataset.goal==="closed":!d.open;
+  const opacities=content.map(el=>d.open?getComputedStyle(el).opacity:"0");
   if(animation){animation.onfinish=null;animation.cancel();}
+  fades.forEach(fade=>fade.cancel());
   d.dataset.goal=opening?"open":"closed";
+  // Measure both natural sizes, including padding and borders, before painting.
+  d.open=false;
+  const closedHeight=d.getBoundingClientRect().height;
   d.open=true;
-  const target=opening?d.getBoundingClientRect().height:summary.getBoundingClientRect().height+2;
-  animation=d.animate([{height:start+"px"},{height:target+"px"}],{duration:330,easing:"cubic-bezier(.22,.66,.32,1)"});
-  animation.onfinish=()=>{d.open=opening;delete d.dataset.goal;animation=null;};
+  const openHeight=d.getBoundingClientRect().height;
+  const timing={duration:opening?460:380,easing:"cubic-bezier(.22,1,.36,1)"};
+  animation=d.animate([
+   {height:start+"px"},
+   {height:(opening?openHeight:closedHeight)+"px"}
+  ],timing);
+  fades=content.map((el,i)=>el.animate([
+   {opacity:opacities[i]},
+   {opacity:opening?1:0}
+  ],{...timing,fill:"both"}));
+  animation.onfinish=()=>{
+   d.open=opening;
+   delete d.dataset.goal;
+   fades.forEach(fade=>fade.cancel());
+   fades=[];
+   animation=null;
+  };
  });
 }
-

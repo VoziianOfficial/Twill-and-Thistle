@@ -1917,6 +1917,8 @@ footer .fine{line-height:1.5}
 .type-word>span{display:inline-block;animation:thread-type .2s ease-out backwards}
 @keyframes thread-type{from{opacity:0;transform:translateY(.11em)}to{opacity:1;transform:none}}
 main details[data-goal]{overflow:hidden;box-sizing:border-box}
+main details[data-goal="closed"] summary:after{transform:rotate(0deg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' stroke='%23c79a58'%3E%3Cpath d='M0 6h12M6 0v12'/%3E%3C/svg%3E")}
+@media(prefers-reduced-motion:reduce){main details summary:after{transition:none}}
 .brand img{width:44px;height:42px;object-fit:contain}
 .railtrack .stitchicon,.offerbody .stitchicon{filter:none;object-fit:contain}
 .round-skein{float:right;width:clamp(52px,8vw,110px);transition:transform .8s}
@@ -2036,14 +2038,50 @@ main details[data-goal]{overflow:hidden;box-sizing:border-box}
 .inner-spread .cloth-cube img{max-height:none}
 .inner-spread>div:last-child{padding:clamp(22px,3vw,42px)}
 .inner-spread>div:last-child p:not(.label){line-height:1.55;margin:.8em 0}
-#fabric-study{position:relative;isolation:isolate;background:#080807;overflow:hidden}
-#fabric-study::before,#fabric-study::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#030303d6,#0303036b),url('../img/hero.webp') center 55%/cover;opacity:.36}
-#fabric-study::after{background-image:linear-gradient(90deg,#030303d6,#0303036b),url('../img/dining.webp');opacity:0}
-@keyframes roomFade{0%,14%,100%{opacity:0}52%,68%{opacity:.43}}
-@media(prefers-reduced-motion:no-preference){#fabric-study::after{animation:roomFade 14s ease-in-out infinite}}
-#fabric-study .chairstage{padding-block:clamp(20px,2.8vw,42px)}
-#fabric-study .chairframe img{max-height:clamp(155px,20vw,300px);object-fit:contain}
-#fabric-study .swatchrow{margin-bottom:0}
+/* A shared interior, with the furniture kept on transparent image layers. */
+#fabric-study{position:relative;isolation:isolate;overflow:hidden;background:#12110e;border-block:1px solid #c79a581c}
+#fabric-study .fabric-stage{display:grid;grid-template-columns:.72fr 1.28fr;align-items:center;gap:0;min-height:520px}
+#fabric-study .fabric-copy{position:relative;z-index:3;padding-block:52px;text-align:left}
+#fabric-study .fabric-copy h2{font-size:clamp(2.5rem,3.55vw,3.8rem);line-height:1.08;letter-spacing:-.045em;margin:18px 0 22px}
+#fabric-study .fabric-intro{max-width:32ch;color:#cbc4b8;font-size:clamp(.94rem,1.05vw,1.06rem);line-height:1.75;margin:0}
+#fabric-study .fabric-instruction{font-size:.78rem;color:#a59b8a;margin:26px 0 15px;letter-spacing:.01em}
+#fabric-study .fabric-palettes{display:flex;gap:19px}
+#fabric-study .fabric-palettes button{display:grid;justify-items:center;gap:11px;min-width:60px;padding:6px 4px;color:#a9a194;font:500 .76rem/1.3 Inter,Arial,sans-serif;transition:color .3s}
+#fabric-study .palette-dot{display:block;width:35px;height:35px;border-radius:50%;background:var(--dot);border:3px solid #12110e;outline:1px solid #776d5c;outline-offset:3px;transition:outline-color .3s,transform .3s,box-shadow .3s}
+#fabric-study .fabric-palettes button[aria-pressed="true"]{color:#eee5d5}
+#fabric-study .fabric-palettes button[aria-pressed="true"] .palette-dot{outline-color:#d3b17b;box-shadow:0 0 0 1px #d3b17b}
+#fabric-study .fabric-palettes button:focus-visible{outline:1px solid #d3b17b;outline-offset:5px;border-radius:5px}
+#fabric-study .fabric-selection{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:23px;padding-top:17px;border-top:1px solid #b8a27e30;width:fit-content;color:#a59b8a;font-size:.72rem;line-height:1.5}
+#fabric-study #fabricPaletteName{color:#dfc9a6;font-family:Inter,Arial,sans-serif}
+#fabric-study .fabric-selection-divider{width:17px;height:1px;background:#8d7959}
+#fabric-study .fabric-room{position:relative;isolation:isolate;aspect-ratio:3/2;margin:0 0 0 -6%;width:106%;align-self:center}
+#fabric-study .fabric-room::before{content:"";position:absolute;inset:0;z-index:0;background:url("../img/fabric-room-interior.webp") center/cover;mask-image:linear-gradient(90deg,transparent,#000 19%,#000 92%,#000b);opacity:.8}
+#fabric-study .fabric-room::after{content:"";position:absolute;z-index:1;left:9%;right:9%;bottom:10%;height:11%;background:radial-gradient(ellipse,#100b07a6,transparent 69%);pointer-events:none}
+#fabric-study .fabric-pair{position:absolute;inset:0;z-index:2;width:100%;height:100%;max-width:none;object-fit:contain;opacity:0;filter:drop-shadow(0 12px 9px #100a063d);transition:opacity .7s cubic-bezier(.25,.46,.45,.94);pointer-events:none}
+#fabric-study .fabric-pair.is-active{opacity:1}
+#fabric-study .fabric-room figcaption{position:absolute;z-index:3;left:11%;right:3%;bottom:4%;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e8d3b52b;padding-top:13px;color:#d6c8b1;font:500 .66rem/1.4 Inter,Arial,sans-serif;text-transform:uppercase;letter-spacing:.12em}
+#fabric-study .fabric-room figcaption i{font-style:normal;margin-inline:7px;opacity:.45}
+@media(hover:hover){#fabric-study .fabric-palettes button:hover{color:#eee5d5}#fabric-study .fabric-palettes button:hover .palette-dot{transform:translateY(-2px);outline-color:#d3b17b}}
+@media(max-width:1100px){
+ #fabric-study .fabric-stage{grid-template-columns:.82fr 1.18fr;min-height:460px}
+ #fabric-study .fabric-copy{padding-block:42px}
+ #fabric-study .fabric-room{width:114%;margin-left:-9%}
+ #fabric-study .fabric-intro{font-size:.9rem;max-width:29ch}
+}
+@media(max-width:760px){
+ #fabric-study .fabric-stage{grid-template-columns:1fr;min-height:0}
+ #fabric-study .fabric-copy{padding:35px 0 4px;text-align:center}
+ #fabric-study .fabric-copy h2{font-size:clamp(2.4rem,7vw,3.2rem);margin:13px 0 16px}
+ #fabric-study .fabric-copy h2 br{display:none}
+ #fabric-study .fabric-intro{max-width:36ch;margin-inline:auto;font-size:.9rem}
+ #fabric-study .fabric-instruction{margin-top:20px}
+ #fabric-study .fabric-palettes{justify-content:center;gap:22px}
+ #fabric-study .fabric-selection{margin:18px auto 0;padding-top:13px}
+ #fabric-study .fabric-room{width:110%;margin:0 -5%;aspect-ratio:3/2}
+ #fabric-study .fabric-room::before{mask-image:linear-gradient(180deg,transparent,#000 18%,#000 88%,transparent)}
+ #fabric-study .fabric-room figcaption{left:7%;right:7%;bottom:5%;font-size:.58rem;padding-top:10px}
+}
+@media(prefers-reduced-motion:reduce){#fabric-study .fabric-pair,#fabric-study .palette-dot,#fabric-study .fabric-palettes button{transition:none}#fabric-study .fabric-palettes button:hover .palette-dot{transform:none}}
 #contact .contactintro{max-width:1100px;margin-inline:auto;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2vw,30px)}
 #contact .contactintro h2{text-align:center;align-self:center}
 #panel[data-view=search],#panel[data-view=bag]{inset:0;margin:auto;min-height:0;height:fit-content;max-height:90dvh}
@@ -2062,7 +2100,6 @@ main details[data-goal]{overflow:hidden;box-sizing:border-box}
  #contact .contactintro p{text-align:center}
  .why .reasonlist>div{padding:13px 30px 13px 10px}
  .why .reasonlist i{width:24px;height:24px;right:4px}
- #fabric-study .chairstage{padding-block:19px}
  .inner-spread>.cube-stage{min-height:0;aspect-ratio:1.65}
  .note-copy{padding:10px}
 }
