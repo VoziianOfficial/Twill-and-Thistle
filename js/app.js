@@ -21,7 +21,7 @@ const itemUrl = (p) => "?product=" + p.id;
 const money = (value) =>
   new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "EUR",
+    currency: "USD",
     maximumFractionDigits: 0,
   }).format(value);
 const pos = (p) => products.indexOf(p);
@@ -35,7 +35,7 @@ const editorialControls = {
  minus:"M3 12h18m-17 0 2-1",
  close:"m5 4 14 16m-14 0L19 4m-3 2 2-1",
  search:"M16.2 15.7 21 20.5l-1.2 1-4.7-5M17 10A7 7 0 1 1 3 10a7 7 0 0 1 14 0Zm-11-1a4.8 4.8 0 0 1 4-3.5",
- menu:"M3 6h18M6 12h15M3 18h18m-16-13 3 2m0 4 3 2m-6 4 3 2",
+ menu:"M4 7h16M4 12h16M4 17h16",
  bag:"M5 8h14l1 13H4L5 8Zm3 1V6a4 4 0 0 1 8 0v3m-9 3 2 2 2-2 2 2 2-2 2 2m-10 2 2 2 2-2 2 2 2-2 2 2",
 };
 
@@ -101,7 +101,7 @@ const headerNav = Object.entries(cfg.links).map(([label, url])=>{
     return `<details class="navgroup"><summary>${esc(label)}</summary><div><a href="${esc(url)}">${label==="Collections"?"Shop all":"Materials & care guide"}</a>${links}</div></details>`;
 }).join("");
 $("#header").innerHTML =
-  `<div class="wrap head">${brand()}<nav aria-label="Main navigation">${headerNav}</nav><div class="actions"><button data-action="search" aria-label="Search site">${icon("search")}</button><i></i><button data-action="bag" class="baglink" aria-label="Open shopping bag">${icon("bag")} <span class="baglabel">Your bag</span> <span class="cartcount">0</span></button><button class="burger" data-action="menu" aria-label="Open menu">${icon("menu")}</button></div></div>`;
+  `<div class="wrap head">${brand()}<nav aria-label="Main navigation">${headerNav}</nav><div class="actions"><button data-action="search" aria-label="Search site">${icon("search")}</button><i></i><button data-action="bag" class="baglink" aria-label="Open shopping bag">${icon("bag")} <span class="baglabel">Your bag</span> <span class="cartcount">0</span></button><button class="burger" data-action="menu" aria-label="Open menu" aria-controls="panel" aria-expanded="false">${icon("menu")}</button></div></div>`;
 updateBag();
 $('link[rel="icon"]').href = cfg.favicon;
 $("#footer").innerHTML =
@@ -325,7 +325,7 @@ const policies = {
     ],
     [
       "Prices and payment",
-      "Catalogue prices are expressed in euros. No money is collected through the enquiry form. Any payment method and due date will be specified in the studio's written offer.",
+      "Catalogue prices are expressed in US dollars. No money is collected through the enquiry form. Any payment method and due date will be specified in the studio's written offer.",
     ],
     [
       "Measurements and colour",
@@ -422,12 +422,31 @@ document.title = [
 if ($("#items")) filterProducts();
 
 const dialog = $("#panel");
-function openPanel(title, content) {
-  dialog.dataset.view=title==="Your bag"?"bag":title==="Menu"?"menu":"search";
-  dialog.setAttribute("aria-label", title);
-  dialog.innerHTML = `<div class="panelhead"><h2>${title}</h2><button data-action="close" aria-label="Close dialog">${icon("close")}</button></div><div class="panelbody">${content}</div>`;
-  if (!dialog.open) dialog.showModal();
+function mobileMenu(){
+ const links=[...Object.entries(cfg.links),["Reviews","index.html#reviews"]];
+ return `<div class="mobile-menu-content"><p class="menu-eyebrow">Explore the studio</p><nav class="mobile-menu-nav" aria-label="Mobile navigation">${links.map(([label,url],index)=>{
+  const target=new URL(url,location.href);
+  const active=target.pathname===location.pathname&&target.search===location.search&&target.hash===location.hash;
+  return `<a href="${esc(url)}" style="--menu-order:${index}"${active?' aria-current="'+(target.hash?'location':'page')+'"':""}><span class="menu-link-label">${esc(label)}</span>${icon("arrow")}</a>`;
+ }).join("")}</nav><div class="mobile-menu-footer"><button class="menu-search" type="button" data-action="search">${icon("search")}<span>Search the studio</span>${icon("arrow")}</button><div class="menu-secondary"><a href="?page=shipping">Shipping &amp; Returns</a><a href="?page=privacy">Privacy</a></div><p>${esc(cfg.footer)}</p></div></div>`;
 }
+function openPanel(title, content) {
+  const isMenu=title==="Menu";
+  dialog.dataset.view=title==="Your bag"?"bag":isMenu?"menu":"search";
+  dialog.setAttribute("aria-label", title);
+  document.documentElement.classList.toggle("menu-open",isMenu);
+  $(".burger").setAttribute("aria-expanded",String(isMenu));
+  const header=isMenu
+    ? `<div class="panelhead menu-header">${brand()}<button type="button" data-action="close" aria-label="Close menu" autofocus><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>`
+    : `<div class="panelhead"><h2>${title}</h2><button data-action="close" aria-label="Close dialog">${icon("close")}</button></div>`;
+  dialog.innerHTML = `${header}<div class="panelbody">${content}</div>`;
+  if (!dialog.open) dialog.showModal();
+  dialog.scrollTop=0;
+}
+dialog.addEventListener("close",()=>{
+ document.documentElement.classList.remove("menu-open");
+ $(".burger").setAttribute("aria-expanded","false");
+});
 function bag() {
   cart = readCart();
   const lines = products.filter((p) => cart[p.id]);
@@ -673,16 +692,7 @@ document.addEventListener("click", (e) => {
       dialog.close();
       break;
     case "menu":
-      openPanel(
-        "Menu",
-        `<div class="menulinks">${nav}<a href="index.html#reviews">Reviews</a><a href="?page=shipping">Shipping &amp; Returns</a></div>`,
-      );
-      $$(".menulinks a").forEach((link, i) =>
-        link.insertAdjacentHTML(
-          "afterbegin",
-          img("obj"+[0,8,3,6,1,5,7][i%7],"","menu-object"),
-        ),
-      );
+      openPanel("Menu",mobileMenu());
       break;
     case "accept":
       save("twill-privacy", true);

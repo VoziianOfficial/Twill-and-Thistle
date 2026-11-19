@@ -146,9 +146,9 @@ try {
             $p = $byId[$id];
             $lineTotal = $p['price'] * $qty;
             $total += $lineTotal;
-            $body .= $p['name'] . ' | ' . $p['size'] . ' | qty ' . $qty . ' | EUR ' . $lineTotal . "\n";
+            $body .= $p['name'] . ' | ' . $p['size'] . ' | qty ' . $qty . ' | USD ' . $lineTotal . "\n";
         }
-        $body .= 'Subtotal: EUR ' . $total;
+        $body .= 'Subtotal: USD ' . $total;
     } elseif ($message === '') {
         respond(422, false);
     }
