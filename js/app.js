@@ -4,6 +4,7 @@ const cfg = window.SITE_CONFIG;
 const products = window.PRODUCTS;
 const $ = (query, root = document) => root.querySelector(query);
 const $$ = (query, root = document) => [...root.querySelectorAll(query)];
+const motion = { observe() {} };
 const esc = (value) =>
   String(value).replace(
     /[&<>"']/g,
@@ -25,8 +26,8 @@ const money = (value) =>
     maximumFractionDigits: 0,
   }).format(value);
 const pos = (p) => products.indexOf(p);
-const img = (src, alt, cls = "") =>
-  `<img loading="lazy" decoding="async" class="${cls}" src="img/${src}.webp" alt="${esc(alt)}">`;
+const img = (src, alt, cls = "", version = "") =>
+  `<img loading="lazy" decoding="async" class="${cls}" src="img/${src}.webp${version ? "?v=" + encodeURIComponent(version) : ""}" alt="${esc(alt)}">`;
 const editorialControls = {
  arrow:"M2.5 12L18 11.4 21 12l-3 .6-15.5-.6Zm12-6 6.5 6-6.5 6",
  next:"m8 4 9 8-9 8m2-12 4 4-4 4",
@@ -175,7 +176,7 @@ function heroIntro(){
   <div class="insetrail"><div class="railtrack">${[0,1].map(copy=>products.map((p,i)=>`<a href="${shopUrl(p.category)}" ${copy?'tabindex="-1" aria-hidden="true"':''}>${markIcon(i)}${p.category}</a>`).join("")).join("")}</div></div></div></section>`;
 }
 function studioStory(){
-  return `<section id="about" class="wrap chapter about-layout"><div class="collage"><div class="collage-main">${img("weaver","An artisan working with cloth in the studio")}</div><span class="spine">The atelier</span><div class="collage-count"><strong data-count="4">4</strong><span>Textile collections</span></div><div class="collage-inset">${img("poster","Spools of thread on the workbench")}</div></div><div class="aboutcopy"><span class="round-skein">${img("obj2","")}</span>${heading("About us","A Room Begins<br>With Its Textiles")}<p>Our collection brings colour, texture and comfort to everyday spaces. Start with a favourite shade, then layer a different weave alongside it.</p><div class="storytiles"><div class="tilelist"><div>${icon("weave")}<div><h3>Our palette</h3><p>Indigo, clay, ivory and ochre, in tones you can mix.</p></div></div><div>${icon("leaf")}<div><h3>Our materials</h3><p>Wool, cotton and flax, with the fibre and finish listed for each piece.</p></div></div></div><a href="?page=care" class="piclink">${img("studio","Linen warp and shuttle on a loom")}<span>Materials & care ${icon("arrow")}</span></a></div></div></section>`;
+  return `<section id="about" class="wrap chapter about-layout"><div class="collage"><div class="collage-main">${img("weaver","An artisan working with cloth in the studio","","20261120-2")}</div><span class="spine">The atelier</span><div class="collage-count"><strong data-count="4">4</strong><span>Textile collections</span></div><div class="collage-inset">${img("poster","Spools of thread on the workbench")}</div></div><div class="aboutcopy"><span class="round-skein">${img("obj2","")}</span>${heading("About us","A Room Begins<br>With Its Textiles")}<p>Our collection brings colour, texture and comfort to everyday spaces. Start with a favourite shade, then layer a different weave alongside it.</p><div class="storytiles"><div class="tilelist"><div>${icon("weave")}<div><h3>Our palette</h3><p>Indigo, clay, ivory and ochre, in tones you can mix.</p></div></div><div>${icon("leaf")}<div><h3>Our materials</h3><p>Wool, cotton and flax, with the fibre and finish listed for each piece.</p></div></div></div><a href="?page=care" class="piclink">${img("studio","Linen warp and shuttle on a loom")}<span>Materials & care ${icon("arrow")}</span></a></div></div></section>`;
 }
 function collectionsSection(){
  return `<section id="catalog" class="band"><div class="wrap chapter">${heading("What we offer","Soft Layers for Every Room",`<div class="headnote"><p>Choose a textile by the way you live. Check its weave, shade and measurements before adding it to your bag.</p>${button("?shop=all","View all textiles")}</div>`)}<div id="featured" class="offergrid"></div><div class="endcontrols">${controls("featured")}</div></div></section>`;
@@ -277,6 +278,7 @@ function filterProducts() {
   if (pairing) cards.push(productCard(pairing, true));
   $("#items").innerHTML = cards.join("") ||
     '<div><p>No pieces match these selections.</p><button class="outline" data-action="reset">Clear filters</button></div>';
+  motion.observe($("#items"));
 }
 function compare(p) {
   return `<div class="compare" style="--cut:50%">${img("b" + pos(p), "Before styling")}${img("a" + pos(p), "Styled with " + p.name, "after")}<div class="split"></div><span>Styled</span><span>Before</span><input type="range" min="0" max="100" value="50" aria-label="Compare room before and after styling"></div>`;
@@ -513,6 +515,7 @@ function setFeatured(step = 0) {
       return `<a class="offercard" href="${itemUrl(p)}"><div class="offerpic">${img("c"+n,p.category)}</div><div class="offerbody"><i>${markIcon(n)}</i><h3>${p.category}</h3><p>${descriptions[n]}</p><span>View ${p.name} ${icon("arrow")}</span></div></a>`;
     },
   ).join("");
+  motion.observe($("#featured"));
 }
 function setLook(i) {
   const p = products[i];
@@ -828,27 +831,125 @@ $$("[data-sample]").forEach((button,index)=>button.addEventListener("click",asyn
   note.setAttribute("aria-hidden",i!==index);
  });
 }));
-if(!reduced.matches){
- const typeObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
-  if(!entry.isIntersecting)return;
-  typeObserver.unobserve(entry.target);
-  const h=entry.target;
-  const walker=document.createTreeWalker(h,NodeFilter.SHOW_TEXT);
-  const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
-  const total=nodes.reduce((sum,n)=>sum+n.textContent.length,0);
-  let n=0;h.setAttribute("aria-label",(h.innerText||h.textContent).replace(/\s+/g," ").trim());
-  for(const node of nodes){
-   const fragment=document.createDocumentFragment();
-   for(const word of node.textContent.split(/(\s+)/)){
-    if(!word.trim()){fragment.append(word);continue;}
-    const group=document.createElement("span");group.className="type-word";group.setAttribute("aria-hidden","true");
-    for(const letter of word){const glyph=document.createElement("span");glyph.textContent=letter;glyph.style.animationDelay=Math.round((n++/total)*620)+"ms";group.append(glyph);}
-    fragment.append(group);
-   }
-   node.replaceWith(fragment);
-  }
- }),{threshold:.14});
- $$("main h1,main h2").forEach(h=>typeObserver.observe(h));
+if ("IntersectionObserver" in window) {
+  const revealSelector = [
+    ".productcard", ".offercard", ".gallerycard", ".category", ".step",
+    ".journalcard", ".reasonlist>div", ".tilelist>div", ".method-grid>a",
+    ".still-trio>a", ".invitefeet>a", ".factgrid>div", ".collage",
+    ".faqpic", ".whyphoto", ".sofa-scene", ".notes-pair", ".reviewplate",
+    ".productstage", ".contact-workbench>*", ".inner-spread>.cube-stage",
+    ".sample-visual", ".sample-choices", ".fabric-room", ".compare",
+    ".sideposter", ".aboutcopy>p", ".contactintro>p", ".headnote>p",
+    ".coverline>p", ".coverline.second", ".fabric-copy>p",
+    ".fabric-palettes", ".fabric-selection", ".spreadhead .label",
+    ".chapter>.label",
+  ].join(",");
+  const seen = new WeakSet();
+  const pending = new Set();
+  const typed = new Map();
+  const finish = (el) => {
+    contentObserver.unobserve(el);
+    pending.delete(el);
+    el.classList.remove("motion-pending", "motion-enter", "type-pending", "type-playing");
+    el.style.removeProperty("--reveal-delay");
+    const record = typed.get(el);
+    if (record) {
+      record.runs.forEach(([run, node]) => run.replaceWith(node));
+      if (record.label === null) el.removeAttribute("aria-label");
+      else el.setAttribute("aria-label", record.label);
+      typed.delete(el);
+    }
+  };
+  const contentObserver = new IntersectionObserver((entries) => {
+    const entering = entries.filter((entry) => entry.isIntersecting && pending.has(entry.target)).map(({ target }) => {
+      const top = target.getBoundingClientRect().top;
+      const siblings = [...target.parentElement.children];
+      const index = siblings.indexOf(target);
+      const preceding = siblings.slice(0, index).filter((sibling) =>
+        sibling.matches(revealSelector) && Math.abs(sibling.getBoundingClientRect().top - top) < 24,
+      ).length;
+      return { target, delay: Math.min(preceding, 3) * 65 };
+    });
+    entering.forEach(({ target, delay }) => {
+      contentObserver.unobserve(target);
+      if (reduced.matches || target.contains(document.activeElement)) {
+        finish(target);
+      } else if (typed.has(target)) {
+        target.classList.replace("type-pending", "type-playing");
+      } else {
+        target.style.setProperty("--reveal-delay", delay + "ms");
+        target.classList.replace("motion-pending", "motion-enter");
+      }
+    });
+  }, { threshold: 0.06, rootMargin: "0px 0px -24px 0px" });
+
+  const prepareHeading = (heading) => {
+    const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    const total = nodes.reduce((sum, node) => sum + [...node.textContent].filter((letter) => /\S/u.test(letter)).length, 0);
+    if (!total) return false;
+    const record = { label: heading.getAttribute("aria-label"), runs: [] };
+    heading.setAttribute("aria-label", (heading.innerText || heading.textContent).replace(/\s+/g, " ").trim());
+    let index = 0;
+    let lastGlyph;
+    const span = Math.min(540, total * 14);
+    nodes.forEach((node) => {
+      const run = document.createElement("span");
+      run.setAttribute("aria-hidden", "true");
+      node.textContent.split(/(\s+)/).forEach((word) => {
+        if (!word.trim()) { run.append(word); return; }
+        const group = document.createElement("span");
+        group.className = "type-word";
+        for (const letter of word) {
+          const glyph = document.createElement("span");
+          glyph.textContent = letter;
+          glyph.style.animationDelay = Math.round((index++ / Math.max(1, total - 1)) * span) + "ms";
+          group.append(glyph);
+          lastGlyph = glyph;
+        }
+        run.append(group);
+      });
+      record.runs.push([run, node]);
+      node.replaceWith(run);
+    });
+    typed.set(heading, record);
+    lastGlyph.addEventListener("animationend", (event) => {
+      if (event.animationName === "thread-type") finish(heading);
+    }, { once: true });
+    heading.classList.add("type-pending");
+    return true;
+  };
+
+  motion.observe = (root) => {
+    for (const el of pending) if (!el.isConnected) finish(el);
+    if (!root || reduced.matches) return;
+    $$(revealSelector + ",h1,h2", root).forEach((el) => {
+      if (seen.has(el) || el.closest("[aria-hidden=true],details:not([open])")) return;
+      const parent = el.parentElement.closest(revealSelector);
+      if (parent && root.contains(parent)) return;
+      seen.add(el);
+      if (el.matches("h1,h2")) {
+        if (!prepareHeading(el)) return;
+      } else {
+        if (el.querySelector("h1,h2")) return;
+        el.classList.add("motion-pending");
+        el.addEventListener("animationend", (event) => {
+          if (event.target === el && event.animationName === "content-appear") finish(el);
+        });
+      }
+      pending.add(el);
+      contentObserver.observe(el);
+    });
+  };
+  const finishAll = () => [...pending].forEach(finish);
+  main.addEventListener("focusin", (event) => {
+    for (const el of pending) if (el.contains(event.target)) finish(el);
+  });
+  reduced.addEventListener("change", () => { if (reduced.matches) finishAll(); });
+  window.addEventListener("beforeprint", finishAll);
+  window.addEventListener("pageshow", (event) => { if (event.persisted) finishAll(); });
+  motion.observe(main);
 }
 for(const d of $$("main details")){
  const summary=$("summary",d);
