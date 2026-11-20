@@ -231,7 +231,6 @@ async function setFabricPalette(index){
  const target=$(`[data-palette-scene="${index}"]`);
  if(!palette||!target)return;
  const request=++fabricPaletteRequest;
- // Keep the current pair visible until the new transparent image is ready.
  try{await target.decode();}catch{return;}
  if(request!==fabricPaletteRequest)return;
  $$("[data-chair]").forEach(button=>button.setAttribute("aria-pressed",Number(button.dataset.chair)===index));
@@ -600,12 +599,17 @@ if ($("#enquiry")) {
     const form = e.currentTarget,
       submit = $('button:not([type="button"])', form),
       status = $("#formStatus");
-    if (submit.disabled) return;
+    if (submit.disabled || !form.reportValidity()) return;
     submit.disabled = true;
     status.textContent = "Sending your request…";
     const data = new FormData(form);
     const order = data.get("subject") === "Order request" ? { ...cart } : {};
     data.set("items", JSON.stringify(order));
+    const controls = $$("input, select, textarea, button", form).filter(
+      (control) => !control.disabled,
+    );
+    controls.forEach((control) => (control.disabled = true));
+    form.setAttribute("aria-busy", "true");
     try {
       const res = await fetch(form.action, {
         method: "POST",
@@ -630,6 +634,8 @@ if ($("#enquiry")) {
       status.textContent =
         "Your request could not be confirmed. Your details are still here. Please try again or email the studio.";
     } finally {
+      controls.forEach((control) => (control.disabled = false));
+      form.removeAttribute("aria-busy");
       submit.disabled = false;
     }
   });
@@ -858,7 +864,6 @@ for(const d of $$("main details")){
   if(animation){animation.onfinish=null;animation.cancel();}
   fades.forEach(fade=>fade.cancel());
   d.dataset.goal=opening?"open":"closed";
-  // Measure both natural sizes, including padding and borders, before painting.
   d.open=false;
   const closedHeight=d.getBoundingClientRect().height;
   d.open=true;

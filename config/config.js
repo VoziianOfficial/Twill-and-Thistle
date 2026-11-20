@@ -18,7 +18,7 @@ window.SITE_CONFIG = {
   },
   "form": {
     "endpoint": "contact.php",
-    "success": "Thank you! We have successfully received your request. Our team will review your information and get back to you shortly.",
+    "success": "Thank you! Your request has been submitted. Our team will review it and get back to you shortly.",
     "subjects": [
       "Product enquiry",
       "Order request",
