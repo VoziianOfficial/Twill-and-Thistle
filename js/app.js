@@ -747,21 +747,71 @@ const observer = new IntersectionObserver(
     entries.forEach((e) => {
       if (e.isIntersecting) {
         e.target.classList.add("arrived");
-        if(!reduced.matches) $$("[data-count]",e.target).forEach(counter=>{
-          const start=performance.now(), value=Number(counter.dataset.count);
-          const tick=now=>{
-            const t=Math.min(1,(now-start)/900);
-            counter.textContent=Math.round(value*(1-(1-t)**3));
-            if(t<1)requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-        });
         observer.unobserve(e.target);
       }
     }),
   { threshold: 0.04 },
 );
 $$(".chapter,.block,.facts").forEach((el) => observer.observe(el));
+
+const counting = new Map();
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(({ target: counter, isIntersecting }) => {
+    if (!isIntersecting) return;
+    counterObserver.unobserve(counter);
+    const begin = () => {
+      if (reduced.matches || !counting.has(counter)) return;
+      // Wait for the final font metrics before updating the digits.
+      document.fonts.ready.then(() => {
+        const state = counting.get(counter);
+        if (!state || reduced.matches) return;
+        let start;
+        const tick = (now) => {
+          if (!counting.has(counter)) return;
+          start ??= now;
+          const progress = Math.min(1, (now - start) / 1200);
+          const value = Math.round(state.value * (1 - (1 - progress) ** 2));
+          if (state.digits.textContent !== String(value)) state.digits.textContent = value;
+          if (progress < 1) state.frame = requestAnimationFrame(tick);
+          else counting.delete(counter);
+        };
+        state.frame = requestAnimationFrame(tick);
+      });
+    };
+    const reveal = counter.closest(".motion-pending,.motion-enter");
+    if (reveal) {
+      const afterReveal = (event) => {
+        if (event.target !== reveal || event.animationName !== "content-appear") return;
+        reveal.removeEventListener("animationend", afterReveal);
+        begin();
+      };
+      reveal.addEventListener("animationend", afterReveal);
+    } else begin();
+  });
+}, { threshold: 0.6 });
+$$("[data-count]").forEach((counter) => {
+  counter.style.setProperty("--count-digits", counter.dataset.count.length);
+  const value = Number(counter.dataset.count);
+  if (reduced.matches || value < 10) return;
+  const digits = document.createElement("span");
+  digits.setAttribute("aria-hidden", "true");
+  digits.textContent = "0";
+  counter.setAttribute("aria-label", counter.dataset.count);
+  counter.replaceChildren(digits);
+  counting.set(counter, { value, digits, frame: null });
+  counterObserver.observe(counter);
+});
+const finishCounting = () => {
+  counterObserver.disconnect();
+  counting.forEach(({ value, digits, frame }) => {
+    cancelAnimationFrame(frame);
+    digits.textContent = value;
+  });
+  counting.clear();
+};
+reduced.addEventListener("change", () => { if (reduced.matches) finishCounting(); });
+window.addEventListener("beforeprint", finishCounting);
+window.addEventListener("pageshow", (event) => { if (event.persisted) finishCounting(); });
 
 document.addEventListener("click", event => {
   for(const group of $$(".navgroup[open]")) if(!group.contains(event.target)) group.open=false;

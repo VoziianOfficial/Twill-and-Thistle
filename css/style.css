@@ -1766,6 +1766,7 @@ p{line-height:1.55}
 .factgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 26px}
 .factgrid>div{display:flex;align-items:center;gap:22px;padding:16px 0 0;border-top:1px solid #ffffff40}
 .factgrid strong{font:600 clamp(2.2rem,4.2vw,4.2rem) var(--serif);color:white}
+[data-count]{display:inline-block;flex:none;inline-size:calc(var(--count-digits,1)*1ch);font-variant-numeric:lining-nums tabular-nums;white-space:nowrap}
 .factgrid h3{max-width:10em;font-size:1.12rem}
 .gallerygrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:22px}
 .gallerycard{grid-column:span 2}.gallerycard:nth-child(n+4){grid-column:span 3}
